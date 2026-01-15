@@ -25,7 +25,7 @@ mkdir -p "$HOME/.local/bin" "$HOME/.local/lib" "$HOME/.local/include"
 cat > "$LOGIN_DIR/env.sh" <<'EOF'
 #!/usr/bin/env bash
 
-LOGIN_DIR="$CONFIG_ROOT/login"
+LOGIN_DIR="$HOME/.config/login"
 
 # Prevent double-loading
 if [[ -n "${LOGIN_ENV_LOADED:-}" ]]; then
@@ -83,7 +83,7 @@ fi
 # If modules aren't available, do nothing
 command -v module &>/dev/null || return 0
 
-MODULES_CONF="$CONFIG_ROOT/modules.conf"
+MODULES_CONF="$HOME/.config/modules.conf"
 
 # Policy: start from a clean slate for reproducibility
 module purge >/dev/null 2>&1 || true
@@ -98,23 +98,15 @@ if [[ -r "$MODULES_CONF" ]]; then
   done < "$MODULES_CONF"
 fi
 
-# ---- Resume / summary of loaded modules ----
-_host="$(hostname -s 2>/dev/null || hostname)"
-_cache_dir="$CACHE_ROOT/login"
-mkdir -p "$_cache_dir"
-
 _summary="$(module -t list 2>&1 | sed '/^No modules loaded$/d')"
 [[ -z "$_summary" ]] && _summary="(no modules loaded)"
 
 # Print only in interactive shells
 if [[ -n "${PS1:-}" ]]; then
-  echo "----- [login] Loaded modules ($_host) -----"
+  echo "----- [login] Loaded modules -----"
   echo "$_summary"
   echo "-----------------------------------------"
 fi
-
-# Save resume to cache
-printf "%s\n" "$_summary" > "$_cache_dir/modules.$_host.txt"
 EOF
 
 chmod 0755 "$LOGIN_DIR/20-modules.sh"
