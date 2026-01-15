@@ -74,19 +74,10 @@ chmod 0755 "$LOGIN_DIR/10-paths.sh"
 cat > "$LOGIN_DIR/20-modules.sh" <<'EOF'
 #!/usr/bin/env bash
 
-# Initialize Environment Modules / Lmod if needed
-if ! command -v module &>/dev/null; then
-  [[ -r /etc/profile.d/modules.sh ]] && source /etc/profile.d/modules.sh
-  [[ -r /usr/share/Modules/init/bash ]] && source /usr/share/Modules/init/bash
-fi
-
 # If modules aren't available, do nothing
 command -v module &>/dev/null || return 0
 
 MODULES_CONF="$HOME/.config/modules.conf"
-
-# Policy: start from a clean slate for reproducibility
-module purge >/dev/null 2>&1 || true
 
 # Load modules listed in modules.conf (one per line, # comments allowed)
 if [[ -r "$MODULES_CONF" ]]; then
