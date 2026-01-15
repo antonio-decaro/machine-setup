@@ -74,19 +74,10 @@ chmod 0755 "$LOGIN_DIR/10-paths.sh"
 cat > "$LOGIN_DIR/20-modules.sh" <<'EOF'
 #!/usr/bin/env bash
 
-# Initialize Environment Modules / Lmod if needed
-if ! command -v module &>/dev/null; then
-  [[ -r /etc/profile.d/modules.sh ]] && source /etc/profile.d/modules.sh
-  [[ -r /usr/share/Modules/init/bash ]] && source /usr/share/Modules/init/bash
-fi
-
 # If modules aren't available, do nothing
 command -v module &>/dev/null || return 0
 
 MODULES_CONF="$HOME/.config/modules.conf"
-
-# Policy: start from a clean slate for reproducibility
-module purge >/dev/null 2>&1 || true
 
 # Load modules listed in modules.conf (one per line, # comments allowed)
 if [[ -r "$MODULES_CONF" ]]; then
@@ -163,12 +154,13 @@ HOOK='[ -r "$HOME/.config/login/env.sh" ] && . "$HOME/.config/login/env.sh"'
 
 append_hook() {
   rc="$1"
-  # Create if missing
+
+  # Only append if the rc file already exists
   if [ ! -f "$rc" ]; then
-    printf '%s\n' "# login-env" "$HOOK" > "$rc"
-    echo "[install] created $rc with login-env hook"
+    echo "[install] skipped $rc (file does not exist)"
     return
   fi
+
   # Append if not present
   if ! grep -F "$HOOK" "$rc" >/dev/null 2>&1; then
     printf '\n%s\n%s\n' "# login-env" "$HOOK" >> "$rc"
@@ -180,15 +172,6 @@ append_hook() {
 
 # Bash interactive
 append_hook "$HOME/.bashrc"
-
-# Ensure login shells load bashrc (common on macOS / minimal envs)
-if [ ! -f "$HOME/.bash_profile" ]; then
-  cat > "$HOME/.bash_profile" <<'EOF'
-# login-env: ensure interactive config is loaded for login shells
-[ -r "$HOME/.bashrc" ] && . "$HOME/.bashrc"
-EOF
-  echo "[install] created ~/.bash_profile to source ~/.bashrc"
-fi
 
 # Zsh (macOS default)
 append_hook "$HOME/.zshrc"
