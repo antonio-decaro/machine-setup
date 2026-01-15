@@ -10,12 +10,10 @@ umask 022
 # Install .config relative to where the script is run
 BASE_DIR="$HOME"
 CONFIG_ROOT="$BASE_DIR/.config"
-CACHE_ROOT="$BASE_DIR/.cache"
 LOGIN_DIR="$CONFIG_ROOT/login"
-CACHE_DIR="$CACHE_ROOT/login"
 MODULES_CONF="$CONFIG_ROOT/modules.conf"
 
-mkdir -p "$LOGIN_DIR" "$LOGIN_DIR/software" "$CACHE_DIR"
+mkdir -p "$LOGIN_DIR" "$LOGIN_DIR/software"
 mkdir -p "$HOME/.local/bin" "$HOME/.local/lib" "$HOME/.local/include"
 
 # -------------------------------------------------
@@ -68,7 +66,7 @@ EOF
 chmod 0755 "$LOGIN_DIR/10-paths.sh"
 
 # -------------------------------------------------
-# Modules loader + resume
+# Modules loader
 # -------------------------------------------------
 
 cat > "$LOGIN_DIR/20-modules.sh" <<'EOF'
