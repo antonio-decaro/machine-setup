@@ -167,7 +167,7 @@ fi
 # Hook into shell startup files
 # -------------------------------------------------
 
-HOOK='[ -r "$HOME/login/env.sh" ] && . "$HOME/login/env.sh"'
+HOOK='[ -r "$HOME/.config/login/env.sh" ] && . "$HOME/.config/login/env.sh"'
 
 append_hook() {
   rc="$1"
