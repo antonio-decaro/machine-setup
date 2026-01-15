@@ -11,7 +11,7 @@ sh install.sh
 Or host `install.sh` and run it with curl/wget:
 
 ```sh
-curl -fsSL https://example.com/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/antonio-decaro/machine-setup/refs/heads/main/install.sh | sh
 ```
 
 This creates `~/.config/login` and a `~/.config/modules.conf` file.
