@@ -8,7 +8,7 @@ umask 022
 # Installs a modular login environment under ~/.config/login and hooks it into shell startup.
 
 # Install .config relative to where the script is run
-BASE_DIR="$(pwd)"
+BASE_DIR="$HOME"
 CONFIG_ROOT="$BASE_DIR/.config"
 CACHE_ROOT="$BASE_DIR/.cache"
 LOGIN_DIR="$CONFIG_ROOT/login"
@@ -167,7 +167,7 @@ fi
 # Hook into shell startup files
 # -------------------------------------------------
 
-HOOK='[ -r "$CONFIG_ROOT/login/env.sh" ] && . "$CONFIG_ROOT/login/env.sh"'
+HOOK='[ -r "$HOME/login/env.sh" ] && . "$HOME/login/env.sh"'
 
 append_hook() {
   rc="$1"
@@ -223,18 +223,8 @@ Entry point:
 Modules list:
   $MODULES_CONF
 
-Modules resume cache (per host):
-  $CACHE_DIR/modules.<host>.txt
-
 Next steps:
   1) Edit $MODULES_CONF to list the modules you want loaded on login.
   2) Open a new terminal OR run:
        . "$LOGIN_DIR/env.sh"
-  3) Check the last modules summary with:
-       ls "$CACHE_DIR"/modules.*.txt
-       cat "$CACHE_DIR"/modules.<host>.txt
-
-Tip:
-  Put host-specific module loads in:
-    $LOGIN_DIR/machines/<host>.sh
 EOF
